@@ -97,8 +97,6 @@ export class PointMarkerApp {
         });
 
         this.areaManager.setCallback('onAreaInfoChange', (data) => {
-            const el = document.getElementById('areaNameInput');
-            if (el) el.value = data.name;
             this.redrawCanvas();
         });
 
@@ -263,21 +261,7 @@ export class PointMarkerApp {
 
 
 
-        // エリア名入力
-        const areaNameInput = document.getElementById('areaNameInput');
-        if (areaNameInput) {
-            areaNameInput.addEventListener('input', (e) => {
-                this.areaManager.setAreaName(e.target.value);
-            });
 
-            // blur時にFirebase更新
-            areaNameInput.addEventListener('blur', () => {
-                const index = this.areaManager.selectedAreaIndex;
-                if (index >= 0) {
-                    this.firebaseSyncManager.updateAreaToFirebase(index);
-                }
-            });
-        }
 
         // エリア選択ドロップダウン
         const areaDropdown = document.getElementById('areaSelectDropdown');
@@ -661,8 +645,15 @@ export class PointMarkerApp {
      * 新しいエリアを追加
      */
     handleAddArea() {
+        const defaultName = `エリア ${this.areaManager.getAllAreas().length + 1}`;
+        const areaName = window.prompt('エリア名を入力してください', defaultName);
+
+        if (areaName === null) {
+            return; // Cancelled
+        }
+
         const newArea = {
-            areaName: `エリア ${this.areaManager.getAllAreas().length + 1}`,
+            areaName: areaName.trim() || defaultName,
             vertices: []
         };
         this.areaManager.addArea(newArea);

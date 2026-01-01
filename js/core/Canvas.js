@@ -173,7 +173,7 @@ export class CanvasRenderer {
         }
 
         // 塗りつぶし
-        this.ctx.fillStyle = isSelected ? 'rgba(255, 149, 0, 0.3)' : 'rgba(128, 128, 128, 0.2)';
+        this.ctx.fillStyle = isSelected ? 'rgba(255, 149, 0, 0.6)' : 'rgba(255, 149, 0, 0.2)';
         this.ctx.fill();
 
         // 枠線
