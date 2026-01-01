@@ -156,10 +156,11 @@ export class CanvasRenderer {
     /**
      * エリア（多角形）を描画
      * @param {Array} vertices - 頂点配列
+     * @param {string} areaName - エリア名
      * @param {boolean} isSelected - 選択中かどうか
      * @param {number} canvasScale - キャンバスのスケール値
      */
-    drawArea(vertices, isSelected = false, canvasScale = 1.0) {
+    drawArea(vertices, areaName = '', isSelected = false, canvasScale = 1.0) {
         if (!vertices || vertices.length < 2) return;
 
         this.ctx.beginPath();
@@ -180,6 +181,33 @@ export class CanvasRenderer {
         this.ctx.strokeStyle = isSelected ? '#ff9500' : '#888888';
         this.ctx.lineWidth = this.applyDevicePixelRatioCorrection(2, canvasScale);
         this.ctx.stroke();
+
+        // エリア名の表示（3頂点以上の場合）
+        if (vertices.length >= 3 && areaName) {
+            // 中心座標（重心）を計算
+            let centerX = 0;
+            let centerY = 0;
+            vertices.forEach(v => {
+                centerX += v.x;
+                centerY += v.y;
+            });
+            centerX /= vertices.length;
+            centerY /= vertices.length;
+
+            const fontSize = Math.max(12, this.applyDevicePixelRatioCorrection(14, 1.0)); // ズームによらず読みやすいサイズ
+            this.ctx.font = `bold ${fontSize}px Arial`;
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+
+            // 文字の縁取り（読みやすさのため）
+            this.ctx.strokeStyle = '#ffffff';
+            this.ctx.lineWidth = this.applyDevicePixelRatioCorrection(3, 1.0);
+            this.ctx.strokeText(areaName, centerX, centerY);
+
+            // 文字本体
+            this.ctx.fillStyle = isSelected ? '#d35400' : '#555555'; // 選択時は濃いオレンジ、非選択時はグレー
+            this.ctx.fillText(areaName, centerX, centerY);
+        }
 
         // 頂点の描画
         vertices.forEach(vertex => {
@@ -203,7 +231,7 @@ export class CanvasRenderer {
      */
     drawAllAreas(allAreas, selectedAreaIndex, canvasScale = 1.0) {
         allAreas.forEach((area, index) => {
-            this.drawArea(area.vertices || [], index === selectedAreaIndex, canvasScale);
+            this.drawArea(area.vertices || [], area.areaName || '', index === selectedAreaIndex, canvasScale);
         });
     }
 
