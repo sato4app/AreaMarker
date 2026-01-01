@@ -547,7 +547,7 @@ header p {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 8px;
+    gap: 0;
     flex-wrap: nowrap;
 }
 
@@ -555,7 +555,8 @@ header p {
     font-size: 12px;
     font-weight: 500;
     color: #495057;
-    min-width: 80px;
+    min-width: unset;
+    margin-right: 4px;
     white-space: nowrap;
 }
 
@@ -565,8 +566,8 @@ header p {
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius-sm);
     font-size: 12px;
-    font-weight: bold;
-    text-align: center;
+    font-weight: normal;
+    text-align: left;
     outline: none;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }

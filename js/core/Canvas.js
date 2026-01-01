@@ -238,12 +238,10 @@ export class CanvasRenderer {
     /**
      * 画像とすべての要素を再描画
      * @param {Array} points - 通常ポイント配列
-     * @param {Array} areaVertices - エリア頂点配列
+     * @param {Array} allAreas - 全エリア配列
      * @param {Object} options - 描画オプション
-     *   - allAreas: 全エリア配列
-     *   - selectedAreaIndex: 選択中のエリアインデックス
      */
-    redraw(points = [], areaVertices = [], spots = [], options = {}) {
+    redraw(points = [], allAreas = [], options = {}) {
         this.drawImage();
 
         // マーカー描画時にズーム・パン変換を適用
@@ -255,10 +253,8 @@ export class CanvasRenderer {
         this.drawPoints(points, options, this.scale);
 
         // エリアの描画
-        if (options.allAreas && Array.isArray(options.allAreas) && options.allAreas.length > 0) {
-            this.drawAllAreas(options.allAreas, options.selectedAreaIndex !== undefined ? options.selectedAreaIndex : -1, this.scale);
-        } else if (areaVertices && areaVertices.length > 0) {
-            this.drawArea(areaVertices, true, this.scale);
+        if (Array.isArray(allAreas) && allAreas.length > 0) {
+            this.drawAllAreas(allAreas, options.selectedAreaIndex !== undefined ? options.selectedAreaIndex : -1, this.scale);
         }
 
         this.ctx.restore();
