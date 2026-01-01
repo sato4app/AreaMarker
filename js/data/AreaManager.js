@@ -124,6 +124,10 @@ export class AreaManager extends BaseManager {
             selectedArea.vertices = [];
         }
         selectedArea.vertices.push(point);
+
+        // 頂点の順序を再定義（面積最大化/シンプルポリゴン化）
+        this.reorderVertices(this.selectedAreaIndex);
+
         this.notify('onChange');
         this.notify('onCountChange', selectedArea.vertices.length);
 
@@ -207,6 +211,10 @@ export class AreaManager extends BaseManager {
 
         if (index >= 0 && index < selectedArea.vertices.length) {
             selectedArea.vertices.splice(index, 1);
+
+            // 頂点の順序を再定義
+            this.reorderVertices(this.selectedAreaIndex);
+
             this.notify('onChange');
             this.notify('onCountChange', selectedArea.vertices.length);
 
@@ -238,12 +246,42 @@ export class AreaManager extends BaseManager {
         }
 
         if (deletedCount > 0) {
+            // 頂点の順序を再定義
+            this.reorderVertices(this.selectedAreaIndex);
+
             this.notify('onChange');
             this.notify('onCountChange', selectedArea.vertices.length);
             this.checkAndUpdateModifiedState();
         }
 
         return deletedCount;
+    }
+
+    /**
+     * 頂点の順序を面積が最大になるように（重心周りの角度順に）再定義
+     * @param {number} areaIndex - 対象エリアのインデックス
+     */
+    reorderVertices(areaIndex) {
+        if (areaIndex < 0 || areaIndex >= this.areas.length) return;
+
+        const area = this.areas[areaIndex];
+        if (!area.vertices || area.vertices.length < 3) return;
+
+        // 重心を計算
+        let cx = 0, cy = 0;
+        area.vertices.forEach(v => {
+            cx += v.x;
+            cy += v.y;
+        });
+        cx /= area.vertices.length;
+        cy /= area.vertices.length;
+
+        // 重心からの角度でソート
+        area.vertices.sort((a, b) => {
+            const angleA = Math.atan2(a.y - cy, a.x - cx);
+            const angleB = Math.atan2(b.y - cy, b.x - cx);
+            return angleA - angleB;
+        });
     }
 
     /**

@@ -573,12 +573,13 @@ export class PointMarkerApp {
             (index) => this.firebaseSyncManager.updatePointToFirebase(index),
             // エリア頂点ドラッグ終了時
             () => {
-                this.redrawCanvas();
-                // Firebase更新
                 const areaIndex = this.areaManager.selectedAreaIndex;
                 if (areaIndex >= 0) {
+                    this.areaManager.reorderVertices(areaIndex);
+                    // Firebase更新
                     this.firebaseSyncManager.updateAreaToFirebase(areaIndex);
                 }
+                this.redrawCanvas();
             }
         );
 
