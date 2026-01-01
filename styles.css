@@ -110,9 +110,12 @@ header p {
 /* オーバーレイモード用の地図コンテナ */
 .main-content[data-layout="overlay"] .map-container {
     width: 100vw;
-    justify-content: flex-start;  /* 左寄せ */
-    align-items: flex-start;      /* 上寄せ */
-    padding: 10px;                /* 余白を最小限に */
+    justify-content: flex-start;
+    /* 左寄せ */
+    align-items: flex-start;
+    /* 上寄せ */
+    padding: 10px;
+    /* 余白を最小限に */
 }
 
 .map-canvas {
@@ -126,8 +129,10 @@ header p {
 
 /* オーバーレイモード用のキャンバス */
 .main-content[data-layout="overlay"] .map-canvas {
-    max-width: calc(100vw - 20px);  /* 余白を最小限に（2px padding × 2） */
-    max-height: calc(100vh - 20px);  /* 余白を最小限に（2px padding × 2） */
+    max-width: calc(100vw - 20px);
+    /* 余白を最小限に（2px padding × 2） */
+    max-height: calc(100vh - 20px);
+    /* 余白を最小限に（2px padding × 2） */
 }
 
 .map-canvas:hover {
@@ -158,7 +163,8 @@ header p {
     right: 10px;
     height: auto;
     max-height: calc(100vh - 40px);
-    z-index: 10001;  /* ポイントID・スポット名ポップアップより前面に表示 */
+    z-index: 10001;
+    /* ポイントID・スポット名ポップアップより前面に表示 */
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow-lg);
 }
@@ -554,7 +560,7 @@ header p {
 }
 
 .route-point-field {
-    width: 60px;
+    width: 150px;
     padding: 6px 8px;
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius-sm);
@@ -774,6 +780,7 @@ header p {
         opacity: 0;
         transform: translate(-50%, -60%);
     }
+
     to {
         opacity: 1;
         transform: translate(-50%, -50%);
@@ -1017,6 +1024,7 @@ header p {
         opacity: 0;
         transform: translateY(-30px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1028,6 +1036,7 @@ header p {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
     to {
         opacity: 0;
         transform: translateY(-20px) scale(0.95);
@@ -1338,6 +1347,7 @@ header p {
         opacity: 0;
         transform: translateY(-30px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);

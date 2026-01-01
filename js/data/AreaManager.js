@@ -160,6 +160,19 @@ export class AreaManager extends BaseManager {
     }
 
     /**
+     * 指定インデックスの頂点を取得（選択中のエリアのみ）
+     * @param {number} index - 頂点の配列インデックス
+     * @returns {Object|null} 頂点データ、またはnull
+     */
+    getAreaVertex(index) {
+        const selectedArea = this.getSelectedArea();
+        if (selectedArea && selectedArea.vertices && index >= 0 && index < selectedArea.vertices.length) {
+            return selectedArea.vertices[index];
+        }
+        return null;
+    }
+
+    /**
      * 頂点の座標を更新（選択中のエリアのみ）
      * @param {number} index - 頂点の配列インデックス
      * @param {number} x - 新しいX座標
