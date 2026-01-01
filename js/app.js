@@ -267,7 +267,7 @@ export class PointMarkerApp {
         const areaNameInput = document.getElementById('areaNameInput');
         if (areaNameInput) {
             areaNameInput.addEventListener('input', (e) => {
-                this.areaManager.updateAreaName(e.target.value);
+                this.areaManager.setAreaName(e.target.value);
             });
 
             // blur時にFirebase更新
@@ -473,6 +473,58 @@ export class PointMarkerApp {
 
 
 
+
+    /**
+     * キャンバスクリック処理
+     * @param {MouseEvent} event - マウスイベント
+     */
+    async handleCanvasClick(event) {
+        if (!this.currentImage || this.justFinishedDragging) {
+            this.justFinishedDragging = false;
+            return;
+        }
+
+        const scale = this.canvasRenderer.getScale();
+        const offset = this.canvasRenderer.getOffset();
+        const coords = CoordinateUtils.mouseToCanvas(event, this.canvas, scale, offset.x, offset.y);
+        const mode = this.layoutManager.getCurrentEditingMode();
+
+        // 既存オブジェクトのクリック判定
+        const objectInfo = this.findObjectAtMouse(coords.x, coords.y);
+
+        if (objectInfo) {
+            this.handleExistingObjectClick(objectInfo, mode);
+            return;
+        }
+
+        // 新規作成
+        await this.handleNewObjectCreation(coords, mode);
+    }
+
+    /**
+     * キャンバス右クリック処理
+     */
+    handleCanvasContextMenu(event) {
+        event.preventDefault();
+        const mode = this.layoutManager.getCurrentEditingMode();
+        if (mode !== 'area') return;
+
+        const scale = this.canvasRenderer.getScale();
+        const offset = this.canvasRenderer.getOffset();
+        const coords = CoordinateUtils.mouseToCanvas(event, this.canvas, scale, offset.x, offset.y);
+
+        const vertexInfo = this.areaManager.findVertexAt(coords.x, coords.y, 10);
+        if (vertexInfo) {
+            const areaIndex = this.areaManager.selectedAreaIndex;
+            if (this.areaManager.removeVertex(vertexInfo.index)) {
+                UIHelper.showMessage('エリア頂点を削除しました');
+                // Firebase更新
+                if (areaIndex >= 0) {
+                    this.firebaseSyncManager.updateAreaToFirebase(areaIndex);
+                }
+            }
+        }
+    }
 
     /**
      * キャンバスマウスダウン処理
